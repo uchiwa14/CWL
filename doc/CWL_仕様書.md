@@ -18,9 +18,9 @@ Windows11上でChromeの複数プロファイルをワンクリックで起動�
 ## Chrome
 |論理名|Folder|表示名|
 |---|---|---|
-|Account1|Default|直仁|
-|Account2|Profile 6|NAS|
-|Account3|Profile 8|モニタ001|
+|Account1|Default|Default_Profile_Name
+|Account2|Profile X|Profile_Name01|
+|Account3|Profile Y|Profile_Name02|
 
 URL:
 https://ksas.kubota.co.jp/ksas/farming/users/login
