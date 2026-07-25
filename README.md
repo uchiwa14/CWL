@@ -28,6 +28,8 @@ CWL は、Google Chrome の複数プロファイルを業務開始時にまと�
 ## config.ini の基本構成
 `config.ini` に `General` と `Accounts` の項目を設定します。以下は最小構成の例です。
 
+> この例は Ver.1.0 向けの設定例です。
+
 ```ini
 [General]
 URL=https://example.com/
@@ -40,24 +42,35 @@ LaunchIntervalMs=800
 ExternalMinWidth=1920
 
 [Accounts]
-Count=2
+Count=3
 
 [Account1]
 Name=Default_Profile
 Folder=Default
 X=0.0
 Y=0.0
-W=1.0
-H=0.5
+W=0.5
+H=1.0
 
 [Account2]
 Name=Profile_8
 Folder=Profile 8
-X=0.0
+X=0.5
+Y=0.0
+W=0.5
+H=0.5
+
+[Account3]
+Name=Profile_9
+Folder=Profile 9
+X=0.5
 Y=0.5
-W=1.0
+W=0.5
 H=0.5
 ```
+
+この例では、`Count=3` の構成を維持し、左側に大きなウィンドウ1つ、右側に上下2分割でウィンドウ2つを配置します。
+`X` / `Y` / `W` / `H` の値はすべて 0.5 刻みで指定しています。
 
 ### 重要なポイント
 - `Name`: 表示用の名前です。GUI 上やログに表示されます。
