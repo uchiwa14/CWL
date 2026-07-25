@@ -1,48 +1,32 @@
 # CWL
 CWL (Chrome Workspace Launcher)
 
-CWL は、Chrome の複数プロファイルを自動で起動し、モニタ上に配置するための AutoHotkey v2 製ランチャーです。業務開始時に各プロファイルを起動または再利用し、業務終了時には管理対象のウィンドウをまとめて閉じます。
+CWL は、Google Chrome の複数プロファイルを業務開始時にまとめて起動し、指定したモニタ上に自動配置する AutoHotkey v2 製ランチャーです。業務終了時には管理対象のウィンドウをまとめて閉じ、日々の作業を効率化します。
+
+## この README でわかること
+- 何をするツールか
+- 必要な環境と準備
+- `config.ini` の設定方法
+- Chrome プロファイルの確認手順
+- 使い方と操作手順
+- トラブルシューティング
+
+## 主な機能
+- 複数 Chrome プロファイルを同時に起動/再利用
+- 画面の指定した位置・サイズにウィンドウを配置
+- 外付けモニタ／ノート PC の選択
+- 起動と終了を GUI で簡単操作
+- ログ出力による動作確認
 
 ## 事前準備
 - AutoHotkey v2.0 がインストールされていること
 - Google Chrome がインストールされていること
-- 使用したい Chrome プロファイルの「プロフィール パス（Profile Path）」を確認しておくこと
+- 使用する Chrome プロファイルの「プロフィール パス（Profile Path）」を確認しておくこと
 
-## config.ini の注意
-`Name` と `Folder` は環境に合わせて修正してください。
+> AutoHotkey v2.0 は公式サイトから入手してください。`CWL.ahk` は v2 構文で記述されています。
 
-- `Name` は表示用の名前です。ログや GUI で参照されます。
-- `Folder` は Chrome の実際のプロファイルディレクトリ名です。`--profile-directory` にそのまま渡されます。
-- ここで指定する値は、Chrome の表示名ではなく、実際のプロフィール パスに含まれるディレクトリ名を使うのが重要です。
-
-### Default プロファイルについて
-Default プロファイルで Chrome を起動し、アドレスバーに `chrome://version/` を入力して実行します。
-
-![Chrome_ProfilePath_Default_確認.png](img/Chrome_ProfilePath_Default_確認.png)
-プロフィール パス（Profile Path）: `C:\Users\XXX\AppData\Local\Google\Chrome\User Data\Default`
-
-```ini
-[Account1]
-Name=Default_Profile_Name
-Folder=Default
-```
-
-### その他プロファイルについて
-対象のプロファイルで Chrome を起動し、アドレスバーに `chrome://version/` を入力して実行します。
-
-![Chrome_ProfilePath_確認.png](img/Chrome_ProfilePath_8_確認.png)
-プロフィール パス（Profile Path）: `C:\Users\XXX\AppData\Local\Google\Chrome\User Data\Profile 8`
-
-この例では、プロフィール パスの末尾にある `Profile 8` をそのまま `Folder` に指定します。
-
-```ini
-[Account2]
-Name=Profile_Name01
-Folder=Profile 8
-```
-
-## 主要設定項目
-`config.ini` では、以下の項目を主に設定します。
+## config.ini の基本構成
+`config.ini` に `General` と `Accounts` の項目を設定します。以下は最小構成の例です。
 
 ```ini
 [General]
@@ -53,32 +37,100 @@ LogEnabled=1
 LogFile=CWL.log
 WindowWaitMs=10000
 LaunchIntervalMs=800
+ExternalMinWidth=1920
 
 [Accounts]
-Count=3
+Count=2
+
+[Account1]
+Name=Default_Profile
+Folder=Default
+X=0.0
+Y=0.0
+W=1.0
+H=0.5
+
+[Account2]
+Name=Profile_8
+Folder=Profile 8
+X=0.0
+Y=0.5
+W=1.0
+H=0.5
 ```
 
-- `URL`: 起動時に開く業務用 URL
-- `DisplayMode`: `Auto` / `External` / `Notebook`
-  - `Auto`: 外付けモニタがあれば優先、なければノート PC を使用
-  - `External`: 常に外付けモニタを優先
-  - `Notebook`: 常にノート PC を使用
-- `ChromePath`: Chrome 実行ファイルの絶対パス。空欄の場合は自動検出します。
-- `WindowWaitMs`: 新しい Chrome ウィンドウが出現するまでの待ち時間
-- `LaunchIntervalMs`: アカウントごとの起動間隔
-- `Count`: `[Account1]` 〜 `[AccountN]` の数と合わせる
+### 重要なポイント
+- `Name`: 表示用の名前です。GUI 上やログに表示されます。
+- `Folder`: Chrome の実際のプロファイルディレクトリ名です。`--profile-directory` にそのまま渡されます。
+- `Folder` には Chrome の表示名ではなく、パス末尾のディレクトリ名を使います。
+- `X` / `Y` / `W` / `H`: 0.0〜1.0 の比率で指定し、モニタ上の表示位置とサイズを決めます。
+- `Count`: `Account1`〜`AccountN` の実際の数と合わせます。
+- `ExternalMinWidth`: 外付けモニタと判定する横幅の閾値です。`DisplayMode=Auto` の場合に使用されます。
 
-`X` / `Y` / `W` / `H` は 0.0 〜 1.0 の比率で、対象モニタ上の配置位置とサイズを指定します。
+## Chrome プロファイルパスの確認方法
+1. 対象の Chrome プロファイルを起動します。
+2. アドレスバーに `chrome://version/` を入力して開きます。
+3. 「Profile Path」欄の末尾を確認します。
+
+### Default プロファイル
+`Profile Path` が次のような場合、`Folder` は `Default` です。
+
+`C:\Users\XXX\AppData\Local\Google\Chrome\User Data\Default`
+
+```ini
+[Account1]
+Name=Default_Profile
+Folder=Default
+```
+
+### その他プロファイル
+`Profile Path` が次のような場合、`Folder` は `Profile 8` です。
+
+`C:\Users\XXX\AppData\Local\Google\Chrome\User Data\Profile 8`
+
+```ini
+[Account2]
+Name=Profile_8
+Folder=Profile 8
+```
+
+> 画像が表示されない環境でも、本手順通りに確認してください。
 
 ## 使い方
-1. `CWL.ahk` を実行します。
-2. 表示された GUI で「業務開始」を押すと、各アカウントの Chrome プロファイルを起動または再利用し、指定位置に配置します。
-3. 「業務終了」を押すと、管理対象のウィンドウをまとめて閉じます。確認ダイアログが表示されます。
+1. `CWL.ahk` をダブルクリックするか、AutoHotkey から実行します。
+2. GUI が表示されたら、`業務開始` をクリックします。
+   - 指定したプロファイルの Chrome を起動/再利用し、設定した位置とサイズで配置します。
+3. 作業が終わったら、`業務終了` をクリックします。
+   - 管理対象のウィンドウをまとめて閉じる確認ダイアログが表示されます。
+
+### 実行時の挙動
+- `ChromePath` が空欄の場合は、自動検出を試みます。
+- 既に起動済みのプロファイルがある場合は再利用します。
+- 起動したウィンドウが指定時間内に見つからない場合、`WindowWaitMs` を延長してください。
 
 ## トラブルシューティング
-- Chrome が見つからない: `ChromePath` を明示的に指定してください。
-- 新しいウィンドウが出現しない: `WindowWaitMs` を大きめに設定してください。
-- 誤ったプロファイルが開く: `Folder` に指定した値が、Chrome の実際のプロフィール パス名と一致しているか確認してください。
-- 配置位置が意図どおりでない: `X` / `Y` / `W` / `H` の比率を調整してください。
-- 複数モニタ環境で配置先が変わる: `DisplayMode` と `ExternalMinWidth` を見直してください。
+- Chrome が見つからない
+  - `ChromePath` に Chrome 実行ファイルのフルパスを設定してください。
+  - 例: `C:\Program Files\Google\Chrome\Application\chrome.exe`
+- 新しいウィンドウが出現しない
+  - `WindowWaitMs` を大きめに設定します。
+  - 起動済みプロファイルに別ウィンドウが存在する場合、再利用制御で待機することがあります。
+- 誤ったプロファイルが開く
+  - `Folder` の値が `chrome://version/` の `Profile Path` と一致しているか確認します。
+  - 同じ Chrome プロファイル名が複数ある場合は、ディレクトリ名を正確に指定してください。
+- 配置位置が意図どおりでない
+  - `X` / `Y` / `W` / `H` の比率を調整してください。
+  - 複数モニタ環境では `DisplayMode` と `ExternalMinWidth` の設定を見直してください。
+- ログを確認したい
+  - `LogEnabled=1` にして `LogFile` を開き、実行結果やエラーを確認します。
+- GUI を閉じてもプロセスが残る
+  - Chrome のプロセスは Chrome 自体が管理します。`業務終了` 後に残るウィンドウがある場合は、ログを確認してください。
+
+## 追加の注意
+- `config.ini` の記述ミスがあると正しく動作しません。`Count` の数と `[AccountX]` セクション数は必ず一致させてください。
+- `ChromePath` を指定する場合は、`chrome.exe` まで含めたパスを入力してください。
+- 本ツールは AutoHotkey v2 用です。v1 では動作しません。
+
+## 連絡先
+- リポジトリ管理者に問い合わせる場合は、README の配布元または `CWL.制作工程票.md` を確認してください。
 
