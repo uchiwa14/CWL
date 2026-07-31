@@ -47,8 +47,7 @@ CWL (Chrome Workspace Launcher) は、Windows 11 上で Google Chrome の複数�
 ## 5. 入出力仕様
 ### 5.1 入力
 - `config.ini`
-  - `[General]`: URL, DisplayMode, ChromePath, LogEnabled, LogFile, WindowWaitMs, LaunchIntervalMs
-  - `[Monitor]`: ExternalMinWidth
+  - `[General]`: URL, DisplayMode, ChromePath, LogEnabled, LogFile, WindowWaitMs, LaunchIntervalMs, ExternalMinWidth
   - `[Accounts]`: Count
   - `[AccountN]`: Name, Folder, X, Y, W, H
 

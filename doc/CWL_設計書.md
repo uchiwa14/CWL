@@ -67,8 +67,7 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
 ### 5.1 設定データ
 `ConfigManager` は次の構造を保持する。
 
-- `general`: URL, DisplayMode, ChromePath, LogEnabled, LogFile, WindowWaitMs, LaunchIntervalMs
-- `monitor`: ExternalMinWidth
+- `general`: URL, DisplayMode, ChromePath, LogEnabled, LogFile, WindowWaitMs, LaunchIntervalMs, ExternalMinWidth
 - `accounts`: 各アカウントの `Name`, `Folder`, `X`, `Y`, `W`, `H`
 
 ### 5.2 実行時データ
