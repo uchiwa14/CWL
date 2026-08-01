@@ -18,6 +18,7 @@ CWL (Chrome Workspace Launcher) は、Windows 11 上で Google Chrome の複数�
 ### 4.1 設定読み込み
 - `config.ini` を読み込み、アカウント数・URL・モニタ判定条件・レイアウト比率・ログ設定を取得する
 - `Accounts` セクションの `Count` と `[Account1]` 〜 `[AccountN]` の数が一致しない場合はエラーとする
+- 起動時に設定ファイルの不足セクション・余剰セクション・不正値を厳密に検出し、不整合がある場合はエラーとして処理を停止する
 
 ### 4.2 Chrome 起動・再利用
 - Chrome 実行ファイルを自動検出する

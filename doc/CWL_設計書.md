@@ -27,7 +27,9 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
 - 出力: `general`, `monitor`, `accounts` を保持した状態
 - 主な処理:
   - `[General]`, `[Monitor]`, `[Accounts]`, `[AccountN]` の読み取り
-  - `Count` とアカウント セクション数の整合確認
+  - `Count` とアカウントセクション数の整合確認（不足・余剰セクションの厳密な検出とエラー処理）
+  - 各設定項目（X, Y, W, H等）の不正値バリデーション
+  - 不整合や不正値が検出された場合は直ちにエラーをスローし、起動を停止する
   - 数値変換（`X/Y/W/H`）
 
 ### 4.2 Logger / ErrorManager
