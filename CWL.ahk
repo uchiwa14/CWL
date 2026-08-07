@@ -25,7 +25,7 @@ class Logger {
             }
         }
 
-        if (IsSet(this.StatusCtrl)) {
+        if (this.HasProp("StatusCtrl")) {
             try {
                 this.StatusCtrl.Text := message
             }

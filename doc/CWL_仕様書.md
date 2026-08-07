@@ -79,7 +79,7 @@ CWL (Chrome Workspace Launcher) は、Windows 11 上で Google Chrome の複数�
 - 例外が発生した場合はエラー分類に応じて適切に処理する
 
 ## 8. 非機能要件
-- AutoHotkey v2 構文に準拠する
+- AutoHotkey v2 構文に準拠する（オブジェクトやプロパティの初期化・未定義チェックにおいて厳格な構文制約を遵守する）
 - 複数 DPI 環境でも座標ずれしないように Per-Monitor DPI Aware を有効化する
 - 画面の解像度・モニタ構成変更に対応できるように、レイアウトは比率指定とする
 - 実行ファイル化（EXE 化）に対応する

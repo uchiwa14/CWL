@@ -35,6 +35,7 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
 ### 4.2 Logger / ErrorManager
 - 実行ログは `LogEnabled=1` の場合にファイルへ追記する
 - GUI のステータス欄へも同時出力する
+- AutoHotkey v2のクラスプロパティに対する未定義（unset）チェックは `HasProp()` などの適切なメソッド・判定を使用し、エラーを防ぐ。
 - 例外処理は `ErrorManager.Guard()` で統一する
 
 ### 4.3 MonitorManager
