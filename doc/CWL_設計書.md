@@ -46,6 +46,7 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
 - `Compute(monitor, acc)` により、各アカウントごとの矩形を返す
 - 返却値は `Map("x", ..., "y", ..., "w", ..., "h", ...)`
 - 最低サイズ 200x150 を保証する
+- 画面外への配置や設定ミスによる異常な比率を検知し、作業領域内に収まるよう座標とサイズをクランプ（補正）する
 
 ### 4.5 ChromeManager
 - Chrome 実行パスを以下の優先順位で検出する
@@ -53,7 +54,7 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
   2. レジストリ `App Paths\chrome.exe`
   3. 既定インストール先
 - `Launch(folder, url)` では `--profile-directory` と `--new-window` を指定して起動する
-- `ExistingWorkWindows(titleKeyword)` により、再利用候補の HWND を取得する
+- `ExistingWorkWindows(url, profile)` により、業務 URL かつ対象プロファイルの再利用候補ウィンドウの HWND を取得し、`account -> hwnd` の対応を明示的に収集する
 
 ### 4.6 WindowManager
 - `Place(hwnd, rect)` でウィンドウを移動・サイズ変更・アクティブ化する
@@ -88,13 +89,15 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
 
 ### 6.2 業務終了フロー
 1. `App.End()` が呼び出される
-2. `managedWindows` と業務 URL のウィンドウを収集する
-3. 確認ダイアログを表示する
+2. 起動時に配置・制御した `managedWindows` を収集する
+3. 確認ダイアログ（終了対象ウィンドウ一覧を含む）を表示する
 4. 承認時に `WindowManager.Close()` を呼び、対象ウィンドウを閉じる
 
 ## 7. エラー処理設計
-- `ErrorManager.Fatal()` は致命的エラーをログに残し、ダイアログで通知する
-- `ErrorManager.Warn()` は警告ログのみを残す
+- エラー分類を明確化し、例外を適切に処理する
+- `ErrorManager.Fatal()` は致命的エラーをログに残し、処理を停止してダイアログで通知する
+- `ErrorManager.Warn()` は処理を継続可能な軽微な失敗に対して警告ログを残す
+- `ErrorManager.Info()` は状態の変化や成功を情報ログとして残す
 - `ErrorManager.Guard()` で `fn.Call()` を実行し、例外発生時に統一収束する
 
 ## 8. 実装ファイル構成
