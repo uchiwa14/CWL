@@ -139,7 +139,25 @@ class ConfigManager {
 
 ; --- Class: MonitorManager ----------------------------------------------------
 class MonitorManager {
-    static Resolve(mode, minWidth) {
+    static GetMonitorFromHwnd(hwnd) {
+        if (!hwnd || !WinExist("ahk_id " hwnd))
+            return MonitorGetPrimary()
+
+        WinGetPos(&X, &Y, &W, &H, "ahk_id " hwnd)
+        centerX := X + (W / 2)
+        centerY := Y + (H / 2)
+
+        count := MonitorGetCount()
+        Loop count {
+            MonitorGet(A_Index, &L, &T, &R, &B)
+            if (centerX >= L && centerX < R && centerY >= T && centerY < B) {
+                return A_Index
+            }
+        }
+        return MonitorGetPrimary()
+    }
+
+    static Resolve(mode, minWidth, guiHwnd := 0) {
         count := MonitorGetCount()
         primary := MonitorGetPrimary()
         targetMon := primary
@@ -151,7 +169,22 @@ class MonitorManager {
             Logger.Info(Format("接続モニタ: Mon{} (X:{}, Y:{}, W:{}, H:{}){}", A_Index, L, T, R - L, B - T, isPrimaryStr))
         }
 
-        if (mode = "Auto" || mode = "External") {
+        appMon := (guiHwnd != 0) ? this.GetMonitorFromHwnd(guiHwnd) : 0
+
+        if (mode = "Auto" || mode = "App") {
+            if (appMon != 0) {
+                targetMon := appMon
+            } else {
+                Loop count {
+                    MonitorGet(A_Index, &Left, &Top, &Right, &Bottom)
+                    w := Right - Left
+                    if (w >= minWidth) {
+                        targetMon := A_Index
+                        break
+                    }
+                }
+            }
+        } else if (mode = "External") {
             Loop count {
                 MonitorGet(A_Index, &Left, &Top, &Right, &Bottom)
                 w := Right - Left
@@ -160,9 +193,7 @@ class MonitorManager {
                     break
                 }
             }
-        }
-
-        if (mode = "Notebook") {
+        } else if (mode = "Notebook") {
             ; ノートPC(プライマリ)を強制
             targetMon := primary
         }
@@ -344,7 +375,8 @@ class App {
         waitMs := ConfigManager.General["WindowWaitMs"]
         intervalMs := ConfigManager.General["LaunchIntervalMs"]
         
-        targetMon := MonitorManager.Resolve(ConfigManager.General["DisplayMode"], ConfigManager.General["ExternalMinWidth"])
+        guiHwnd := (this.HasProp("MainGui") && this.MainGui) ? this.MainGui.Hwnd : 0
+        targetMon := MonitorManager.Resolve(ConfigManager.General["DisplayMode"], ConfigManager.General["ExternalMinWidth"], guiHwnd)
         
         for acc in ConfigManager.Accounts {
             Logger.Info("処理中: " . acc["Name"])

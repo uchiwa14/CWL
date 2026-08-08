@@ -40,7 +40,8 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
 
 ### 4.3 MonitorManager
 - `MonitorGetCount()` と `MonitorGetWorkArea()` を使って全モニタ情報を収集し、接続されているすべてのモニタ一覧を INFO ログとして出力する
-- `DisplayMode` に応じて、外付けモニタまたはプライマリモニタを選択する
+- `GetMonitorFromHwnd(hwnd)` により、CWLアプリ（`App.MainGui`）が表示されているウィンドウ位置から所属するモニタ番号を算出・特定する
+- `DisplayMode`（`Auto`/`App`/`External`/`Notebook`）に応じて、CWLアプリが表示されている同一モニタ、外付けモニタ、またはプライマリモニタを選択する
 - `ExternalMinWidth` を基準に外付けモニタ判定を行う
 
 ### 4.4 LayoutManager
@@ -82,7 +83,7 @@ CWL は単一の AutoHotkey スクリプトとして実装され、以下の責�
 ### 6.1 業務開始フロー
 1. `App.Init()` で設定・ログ・各モジュールを初期化する
 2. `App.Start()` が呼び出される
-3. `MonitorManager.Resolve()` により接続されているモニタ一覧情報を INFO ログに出力し、対象モニタを決定する
+3. `MonitorManager.Resolve()` により接続されているモニタ一覧情報を INFO ログに出力し、CWLアプリ（`App.MainGui`）が表示されているモニタを特定・決定する
 4. `ChromeManager.ExistingWorkWindows()` で再利用候補を取得する
 5. 各アカウントについて、既存ウィンドウがあれば再利用し、なければ新規起動する
 6. `LayoutManager.Compute()` で矩形を算出し、`WindowManager.Place()` で配置する
