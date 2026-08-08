@@ -144,6 +144,13 @@ class MonitorManager {
         primary := MonitorGetPrimary()
         targetMon := primary
 
+        ; 接続されている全モニタ情報をログ出力
+        Loop count {
+            MonitorGetWorkArea(A_Index, &L, &T, &R, &B)
+            isPrimaryStr := (A_Index == primary) ? " [Primary]" : ""
+            Logger.Info(Format("接続モニタ: Mon{} (X:{}, Y:{}, W:{}, H:{}){}", A_Index, L, T, R - L, B - T, isPrimaryStr))
+        }
+
         if (mode = "Auto" || mode = "External") {
             Loop count {
                 MonitorGet(A_Index, &Left, &Top, &Right, &Bottom)
